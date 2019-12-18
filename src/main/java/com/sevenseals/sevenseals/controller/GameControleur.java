@@ -6,8 +6,6 @@ import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
 import com.sevenseals.sevenseals.entity.Token;
 import com.sevenseals.sevenseals.repository.GameRepository;
-import com.sevenseals.sevenseals.repository.PlayerRepository;
-import org.apache.catalina.webresources.ClasspathURLStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +17,6 @@ import java.util.Random;
 
 @Controller
 public class GameControleur{
-
     @Autowired
     private GameRepository repository;
 
