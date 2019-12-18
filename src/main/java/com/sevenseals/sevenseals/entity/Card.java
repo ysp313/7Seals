@@ -8,7 +8,7 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Color color;
+    private String color;
     private int value;
 
     @ManyToOne
@@ -21,6 +21,10 @@ public class Card {
 
     public Card() {
     }
+    public Card(int value, String color) {
+        this.value=value;
+        this.color = color;
+    }
 
     public Long getId() {
         return id;
@@ -30,11 +34,11 @@ public class Card {
         this.id = id;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 

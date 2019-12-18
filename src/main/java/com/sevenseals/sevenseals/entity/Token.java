@@ -8,8 +8,7 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Color color;
-    private int value;
+    private String color;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
@@ -20,6 +19,9 @@ public class Token {
     private Game game;
 
     public Token() {
+    }
+    public Token(String color) {
+        this.color = color;
     }
 
     public Game getGame() {
@@ -46,19 +48,12 @@ public class Token {
         this.id = id;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
 }
