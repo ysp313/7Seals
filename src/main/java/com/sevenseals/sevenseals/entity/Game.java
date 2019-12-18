@@ -15,6 +15,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Card> field;
 
     private int startPos;
