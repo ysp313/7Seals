@@ -50,7 +50,8 @@ public class GameControleur{
     @GetMapping("/game/{gameid}")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, Model model){
         model.addAttribute("game",repository.getOne(gameId));
-        model.addAttribute("currentPlayer",playerRepository.getOne(userId))
+        model.addAttribute("currentPlayer",playerRepository.getOne(userId));
+
 ;        return "game";
     }
 
@@ -109,6 +110,8 @@ public class GameControleur{
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
+
+
     @PostMapping("/game/{gameid}/taketoken")
     public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@PathVariable long playerId, @ModelAttribute List<Token> tokenList){
         Game currentGame = repository.getOne(gameId);
@@ -119,6 +122,6 @@ public class GameControleur{
             }
         }
         repository.save(currentGame);
-        return "redirect:/";
+        return "redirect:/game/"+gameId;
     }
 }

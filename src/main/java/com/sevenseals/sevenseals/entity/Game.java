@@ -21,6 +21,26 @@ public class Game {
 
     private int startPos;
 
+    private int currentPos;
+
+    public int getCurrentPos() {
+        return this.currentPos;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
+    }
+
+    public int getState() {
+        return this.state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    private int state;
+
     public Game() {
         this.players = new ArrayList<>();
         this.tokens = new ArrayList<>();
