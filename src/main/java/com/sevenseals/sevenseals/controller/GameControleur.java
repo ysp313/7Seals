@@ -6,6 +6,7 @@ import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
 import com.sevenseals.sevenseals.entity.Token;
 import com.sevenseals.sevenseals.repository.GameRepository;
+import com.sevenseals.sevenseals.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,10 @@ public class GameControleur{
     @Autowired
     private GameRepository repository;
 
-    @GetMapping("/")
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @GetMapping(value = "/", produces = "application/json")
     @ResponseBody
     public String startGame(){
         return repository.findAll().toString();
@@ -28,72 +32,81 @@ public class GameControleur{
 
 
     @GetMapping("/game/create")
-    @ResponseBody
-    public String createGameGetter(@ModelAttribute Player p){
+    public String createGameGetter(@RequestParam(name="userid") long userId, Model model){
+        Player currentPlayer = playerRepository.getOne(userId);
+        model.addAttribute("currentPlayer",currentPlayer);
         return "createGame";
     }
 
     @PostMapping("/game/create")
-    public String createGame(@ModelAttribute Player p){
+    public String createGame(@RequestParam(name="userid") long userId){
         Game game = new Game();
-        game.getPlayers().add(p);
-        repository.save(game);
-        return "redirect:/game/"+ game.getId();
+        Player currentPlayer = playerRepository.findById(userId).get();
+        currentPlayer.setGame(game);
+        game = repository.save(game);
+        return "redirect:/game/"+ game.getId() + "/?userid="+ userId;
     }
 
     @GetMapping("/game/{gameid}")
-    public String gameStart(@PathVariable(name = "gameid") long gameId, Model model){
+    public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, Model model){
         model.addAttribute("game",repository.getOne(gameId));
-        return "game";
+        model.addAttribute("currentPlayer",playerRepository.getOne(userId))
+;        return "game";
     }
 
-    @GetMapping("/game/join")
-    public String gameJoin(@PathVariable(name = "gameid") long gameId, @ModelAttribute Player p){
+    @PostMapping("/game/join")
+    public String gameJoin(@RequestParam(name = "gameid") long gameId, @RequestParam(name = "userid") long userId){
         Game selectedGame = repository.getOne(gameId);
-        selectedGame.getPlayers().add(p);
+        Player currentPlayer = playerRepository.getOne(userId);
+        currentPlayer.setGame(selectedGame);
         repository.save(selectedGame);
-        return "redirect:/game/" + selectedGame.getId();
+        return "redirect:/game/" + selectedGame.getId()+"?userid="+ userId;
     }
 
 
     @PostMapping("/game/{gameid}/play")
     public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam Card card){
         Game currentGame = repository.getOne(gameId);
-        currentGame.getField().add(card);
+        card.setGame(currentGame);
         repository.save(currentGame);
         return "";
     }
 
-    @PostMapping("/game/{gameid}/start")
-    public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam String username){
+    @GetMapping("/game/{gameid}/start")
+    public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId){
         Game currentGame = repository.getOne(gameId);
         List<Card> deck = new ArrayList<>();
-        for(int i = 0; i < currentGame.getPlayers().size() * 3;i++){
+        for(int i = 1; i <= currentGame.getPlayers().toArray().length * 3;i++){
             deck.add(new Card(i, "Rouge"));
             deck.add(new Card(i, "Jaune"));
             deck.add(new Card(i, "Bleu"));
             deck.add(new Card(i, "Vert"));
             deck.add(new Card(i, "Violet"));
-            if(i%3 == 0) // le nomebre de carte d'une couleur divisé par 3
-                currentGame.getTokens().add(new Token("Rouge"));
         }
-        for(int i=0; i < currentGame.getPlayers().size() * 3 / 5; i++) {
-            currentGame.getTokens().add(new Token("Jaune"));
-            currentGame.getTokens().add(new Token("Bleu"));
-            currentGame.getTokens().add(new Token("Vert"));
-            currentGame.getTokens().add(new Token("Violet"));
-            currentGame.getTokens().add(new Token("Noir"));
-            currentGame.getTokens().add(new Token("Noir"));
+        for(int i=0; i < 3; i++) {
+            new Token("Jaune").setGame(currentGame);
+            new Token("Bleu").setGame(currentGame);
+            new Token("Vert").setGame(currentGame);
+            new Token("Violet").setGame(currentGame);
+            new Token("Noir").setGame(currentGame);
+            new Token("Noir").setGame(currentGame);
         }
 
         Random randGen = new Random();
+        int decksize = deck.toArray().length;
         for(Player p : currentGame.getPlayers()){
-            for(int i = 0; i < currentGame.getPlayers().size() * 3;i++){
-                p.getHand().add(deck.remove(randGen.nextInt(deck.size())));
+            System.out.println(p.getUsername() + "deck:" + deck.toArray().length);
+            for(int i = 0; i <  decksize/ currentGame.getPlayers().toArray().length;i++){
+                Card newCard = deck.remove(randGen.nextInt(deck.size()));
+                newCard.setPlayer(p);
+                newCard.setGame(currentGame);
+            }
+            for(Card c:p.getCard()){
+                System.out.println(c.getColor() + " " + c.getValue());
             }
         }
         repository.save(currentGame);
-        return "";
+        return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
     @PostMapping("/game/{gameid}/taketoken")

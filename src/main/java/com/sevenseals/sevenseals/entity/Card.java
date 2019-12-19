@@ -26,6 +26,23 @@ public class Card {
         this.color = color;
     }
 
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+        this.game.getField().add(this);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public Long getId() {
         return id;
     }

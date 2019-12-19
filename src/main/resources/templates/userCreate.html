@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SevenSeals</title>
+</head>
+<body>
+    <h1>Bienvenue joueur!</h1>
+
+    <form action="/user/create" th:action="@{/user/create}" th:object="${newUser}" method="post">
+        <label for="userName">Entrez votre nom</label>
+        <input type="text" id="userName" name="userName" th:field="*{username}">
+        <input type="submit">
+
+    </form>
+
+</body>
+</html>
