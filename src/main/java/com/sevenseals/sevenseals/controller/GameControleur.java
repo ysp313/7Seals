@@ -1,11 +1,11 @@
 package com.sevenseals.sevenseals.controller;
 
-
 import com.sevenseals.sevenseals.constant.GameStateEnum;
 import com.sevenseals.sevenseals.entity.Card;
 import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
 import com.sevenseals.sevenseals.entity.Token;
+import com.sevenseals.sevenseals.repository.CardRepository;
 import com.sevenseals.sevenseals.repository.GameRepository;
 import com.sevenseals.sevenseals.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,10 @@ public class GameControleur{
 
     @Autowired
     private PlayerRepository playerRepository;
+
+
+    @Autowired
+    private CardRepository cardRepository;
 
     @GetMapping(value = "/", produces = "application/json")
     @ResponseBody
@@ -60,6 +64,7 @@ public class GameControleur{
             case TOKEN_PHASE:
                 return "tokenChoice";
             case PLAY_PHASE:
+                model.addAttribute("selectionCard", new Card());
                 return "game";
             case DONE:
                 return "endGame";
@@ -78,11 +83,13 @@ public class GameControleur{
 
 
     @PostMapping("/game/{gameid}/play")
-    public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam Card card){
+    public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, @ModelAttribute Card card){
         Game currentGame = repository.getOne(gameId);
+        card = cardRepository.findById(card.getId()).get();
         card.setGame(currentGame);
+        card.setPlayer(null);
         repository.save(currentGame);
-        return "";
+        return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
     @GetMapping("/game/{gameid}/start")
@@ -126,7 +133,7 @@ public class GameControleur{
     }
 
     @PostMapping("/game/{gameid}/taketoken")
-    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@PathVariable long playerId, @ModelAttribute List<Token> tokenList){
+    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @ModelAttribute ArrayList<Token> tokenList){
         Game currentGame = repository.getOne(gameId);
         for(Player player : currentGame.getPlayers()){
             if(player.getId() == gameId){
