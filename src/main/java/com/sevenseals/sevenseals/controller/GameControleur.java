@@ -4,7 +4,6 @@ import com.sevenseals.sevenseals.constant.GameStateEnum;
 import com.sevenseals.sevenseals.entity.Card;
 import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
-import com.sevenseals.sevenseals.entity.Token;
 import com.sevenseals.sevenseals.repository.CardRepository;
 import com.sevenseals.sevenseals.repository.GameRepository;
 import com.sevenseals.sevenseals.repository.PlayerRepository;
@@ -24,7 +23,6 @@ public class GameControleur{
 
     @Autowired
     private PlayerRepository playerRepository;
-
 
     @Autowired
     private CardRepository cardRepository;
@@ -85,16 +83,20 @@ public class GameControleur{
     @PostMapping("/game/{gameid}/play")
     public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, @ModelAttribute Card card){
         Game currentGame = repository.getOne(gameId);
+        Player currentUser = playerRepository.getOne(userId);
         card = cardRepository.findById(card.getId()).get();
-        currentGame.placeOnField(card);
-        repository.save(currentGame);
+        if(currentGame.getPlayerToPlay() == currentUser){
+            currentGame.placeOnField(card);
+            repository.save(currentGame);
+        }else{
+            return "redirect:/game/" + currentGame.getId()+"?userid="+ userId +"&error=Ce n'est pas votre tours";
+        }
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
     @GetMapping("/game/{gameid}/start")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId){
         Game currentGame = repository.getOne(gameId);
-        currentGame.init();
         if(currentGame.getState() == GameStateEnum.WAITING_PHASE) {
             List<Card> deck = new ArrayList<>();
             for (int i = 1; i <= currentGame.getPlayers().toArray().length * 3; i++) {
@@ -123,11 +125,11 @@ public class GameControleur{
     }
 
     @PostMapping("/game/{gameid}/taketoken")
-    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @ModelAttribute ArrayList<Token> tokenList){
+    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @RequestParam int plis){
         Game currentGame = repository.getOne(gameId);
         for(Player p : currentGame.getPlayers()){
             if(p.getId()== userId) {
-                p.addTokens(tokenList);
+                p.setPlis(plis);
                 playerRepository.save(p);
             }
         }

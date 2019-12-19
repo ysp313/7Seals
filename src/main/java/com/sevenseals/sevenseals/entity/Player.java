@@ -14,8 +14,9 @@ public class Player {
     @OneToMany(mappedBy="player", cascade = CascadeType.ALL)
     private List<Card> card;
 
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
-    private List<Token> tokens;
+
+    @Column
+    private int plis;
 
     private int score;
     private String username;
@@ -26,7 +27,6 @@ public class Player {
 
     public Player() {
         this.card = new ArrayList<>();
-        this.tokens = new ArrayList<>();
     }
 
     public Game getGame() {
@@ -56,13 +56,6 @@ public class Player {
         this.card = hand;
     }
 
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
 
     public int getScore() {
         return score;
@@ -85,16 +78,15 @@ public class Player {
         c.setGame(game);
         c.setPlayer(this);
     }
-
-    public void addToken(Token c){
-        this.tokens.add(c);
-        c.setPlayer(this);
-        c.setGame(this.game);
+    public int getPlis() {
+        return plis;
     }
-	public void addTokens(ArrayList<Token> tokenList) {
-        for(Token t : tokenList){
-            this.addToken(t);
-        }
-	}
 
+    public void setPlis(int plis) {
+        this.plis = plis;
+    }
+
+    public void addScore(int i) {
+        this.score += i;
+    }
 }
