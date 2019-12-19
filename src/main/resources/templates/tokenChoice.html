@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Choisi tes tokens</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/img/favicon.png}">
+    <title>Les 7 sceaux en ligne</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:src="@{/snow.js}"></script>
 </head>
-<body>
+<body class="bg-jeu">
+<div class="container">
+        <div class="row">
+            <div class="col mt-4 text-center ">
     <form action="/game/join" th:action="@{'/game/'+${gameid}+'/taketoken'(userid=${currentPlayer.id})}" method="post">
     
         <div th:each="token : ${game.tokens}">
             <label th:text="${token.color}" th:for="|token-${token.id}|"></label>
             <input type="checkbox" th:id="|token-${token.id}|" name="token" th:value="${token}" checked>
         </div>
-        <input type="submit">
+        <input class="btn btn-white btn-outline-warning" type="submit">
         </form>
+        </div>
+        </div>
+        </div>
 </body>
 </html>

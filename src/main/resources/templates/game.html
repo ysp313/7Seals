@@ -2,12 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/img/favicon.png}">
+    <title>Les 7 sceaux en ligne</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:src="@{/snow.js}"></script>
 </head>
-<body>
-    <p>Hello</p>
-    <div>
+<body class="bg-jeu">
+<div class="container">
+        <div class="row">
+            <div class="col mt-4 text-center ">
+    <p>Hello </p>
+ 
         <form action="/game/join" th:action="@{'/game/'+${gameid}+'/play'(userid=${currentPlayer.id})}" th:object="${selectionCard}" method="post">
             <div th:each="card : ${currentPlayer.card }">
 
@@ -15,8 +26,10 @@
                 <input type="radio" th:id="|card-${card.id}|" name="card" th:value="${card.id}" th:field="*{id}"
                     checked>
             </div>
-            <input type="submit">
+            <input class="btn btn-white btn-outline-warning" type="submit">
         </form>
+    </div>
+    </div>
     </div>
 </body>
 </html>

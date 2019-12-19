@@ -1,0 +1,23 @@
+<svg id="bleu" xmlns="http://www.w3.org/2000/svg" width="204" height="288" viewBox="0 0 204 288">
+  <g id="Groupe_37" data-name="Groupe 37" transform="translate(-666.906 -499.986)">
+    <g id="Groupe_19" data-name="Groupe 19" transform="translate(666.906 499.986)">
+      <g id="Rectangle_8" data-name="Rectangle 8" fill="#fff" stroke="#707070" stroke-width="2">
+        <rect width="204" height="288" rx="8" stroke="none"/>
+        <rect x="1" y="1" width="202" height="286" rx="7" fill="none"/>
+      </g>
+    </g>
+    <g id="Groupe_9" data-name="Groupe 9" transform="translate(682.251 554.298)">
+      <g id="Groupe_6" data-name="Groupe 6">
+        <g id="Ellipse_6" data-name="Ellipse 6" transform="translate(3.448)" fill="#5464d7" stroke="#faecec" stroke-width="1">
+          <ellipse cx="84.197" cy="85" rx="84.197" ry="85" stroke="none"/>
+          <ellipse cx="84.197" cy="85" rx="83.697" ry="84.5" fill="none"/>
+        </g>
+        <g id="Tracé_90" data-name="Tracé 90" transform="translate(58.428 1.258) rotate(30)" fill="#5464d7" opacity="0.948">
+          <path d="M 100.0297317504883 115.3523712158203 L 34.65907287597656 115.0829544067383 L 1.73073422908783 58.14787292480469 L 34.18093109130859 1.503588914871216 L 99.55158996582031 1.772985696792603 L 132.4799194335938 58.70806884765625 L 100.0297317504883 115.3523712158203 Z" stroke="none"/>
+          <path d="M 35.04827117919922 3.007171630859375 L 3.46148681640625 58.14429092407227 L 35.52639770507812 113.5865097045898 L 99.16239929199219 113.8487548828125 L 130.7491607666016 58.71163177490234 L 98.68422698974609 3.269416809082031 L 35.04827117919922 3.007171630859375 M 33.31360626220703 -7.62939453125e-06 L 100.4188995361328 0.2765274047851562 L 134.2106475830078 58.70450973510742 L 100.8970642089844 116.8559341430664 L 33.79172515869141 116.5793914794922 L 0 58.15140914916992 L 33.31360626220703 -7.62939453125e-06 Z" stroke="none" fill="#faecec"/>
+        </g>
+      </g>
+    </g>
+    <path id="Tracé_91" data-name="Tracé 91" d="M0,68.538V0L28.664,17.232V53.838" transform="translate(755.653 605.117)" fill="none" stroke="#faecec" stroke-width="4"/>
+  </g>
+</svg>
