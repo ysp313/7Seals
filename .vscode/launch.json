@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DemoApplication<sevenseals>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.sevenseals.sevenseals.DemoApplication",
+            "projectName": "sevenseals",
+            "args": ""
+        }
+    ]
+}
