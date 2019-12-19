@@ -32,11 +32,8 @@ public class Player {
     public Game getGame() {
         return game;
     }
-    public void addCard(Card c){
-        this.card.add(c);
-        c.setGame(game);
-        c.setPlayer(this);
-    }
+
+
 
     public void setGame(Game game) {
         this.game = game;
@@ -83,11 +80,21 @@ public class Player {
         this.username = username;
     }
 
-	public void giveTokens(ArrayList<Token> tokenList) {
-        this.game.getTokens().removeAll(tokenList);
+    public void addCard(Card c){
+        this.card.add(c);
+        c.setGame(game);
+        c.setPlayer(this);
+    }
+
+    public void addToken(Token c){
+        this.tokens.add(c);
+        c.setPlayer(this);
+        c.setGame(this.game);
+    }
+	public void addTokens(ArrayList<Token> tokenList) {
         for(Token t : tokenList){
-            t.setPlayer(this);
+            this.addToken(t);
         }
-        this.tokens.addAll(tokenList);
 	}
+
 }

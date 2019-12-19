@@ -23,14 +23,19 @@ public class Token {
         this.color = color;
     }
 
+    public Token(String color, Game game) {
+        this.game = game;
+        this.color = color;
+    }
+
     public Game getGame() {
         return game;
     }
 
     public void setGame(Game game) {
         this.game = game;
-        this.game.getTokens().add(this);
     }
+
 
     public Player getPlayer() {
         return player;

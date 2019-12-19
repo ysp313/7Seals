@@ -94,6 +94,7 @@ public class GameControleur{
     @GetMapping("/game/{gameid}/start")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId){
         Game currentGame = repository.getOne(gameId);
+        currentGame.init();
         if(currentGame.getState() == GameStateEnum.WAITING_PHASE) {
             List<Card> deck = new ArrayList<>();
             for (int i = 1; i <= currentGame.getPlayers().toArray().length * 3; i++) {
@@ -103,15 +104,6 @@ public class GameControleur{
                 deck.add(new Card(i, "Vert"));
                 deck.add(new Card(i, "Violet"));
             }
-            for (int i = 0; i < 3; i++) {
-                new Token("Jaune").setGame(currentGame);
-                new Token("Bleu").setGame(currentGame);
-                new Token("Vert").setGame(currentGame);
-                new Token("Violet").setGame(currentGame);
-                new Token("Noir").setGame(currentGame);
-                new Token("Noir").setGame(currentGame);
-            }
-
             Random randGen = new Random();
             int decksize = deck.toArray().length;
             for (Player p : currentGame.getPlayers()) {
@@ -133,11 +125,14 @@ public class GameControleur{
     @PostMapping("/game/{gameid}/taketoken")
     public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @ModelAttribute ArrayList<Token> tokenList){
         Game currentGame = repository.getOne(gameId);
-        Player p = playerRepository.findById(userId).get();
-        p.giveTokens(tokenList);
+        for(Player p : currentGame.getPlayers()){
+            if(p.getId()== userId) {
+                p.addTokens(tokenList);
+                playerRepository.save(p);
+            }
+        }
         currentGame.setState(GameStateEnum.PLAY_PHASE);
         repository.save(currentGame);
-        playerRepository.save(p);
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 }

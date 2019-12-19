@@ -15,7 +15,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Player> players;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Token> tokens;
 
     @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
@@ -37,8 +37,23 @@ public class Game {
         this.tokens = new ArrayList<>();
         this.field = new ArrayList<>();
     }
+    public void init(){
+
+        for (int i = 0; i < 3; i++) {
+            this.tokens.add(new Token("Jaune", this));
+            this.tokens.add(new Token("Bleu",this));
+            this.tokens.add(new Token("Vert",this));
+            this.tokens.add(new Token("Violet",this));
+            this.tokens.add(new Token("Noir",this));
+            this.tokens.add(new Token("Noir",this));
+        }
+    }
+    public void takeToken(Token t){
+        this.tokens.remove(t);
+    }
     public void placeOnField(Card c){
         this.field.add(c);
+        c.setField(this);
         c.setPlayer(null);
     }
 
