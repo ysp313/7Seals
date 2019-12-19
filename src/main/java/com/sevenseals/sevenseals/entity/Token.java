@@ -1,7 +1,6 @@
 package com.sevenseals.sevenseals.entity;
 
 import javax.persistence.*;
-import java.awt.*;
 
 @Entity
 public class Token {

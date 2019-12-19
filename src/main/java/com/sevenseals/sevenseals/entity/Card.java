@@ -1,8 +1,6 @@
 package com.sevenseals.sevenseals.entity;
 
-import javax.annotation.processing.Generated;
 import javax.persistence.*;
-import java.awt.*;
 @Entity
 public class Card {
     @Id

@@ -1,7 +1,6 @@
 package com.sevenseals.sevenseals.controller;
 
 import com.sevenseals.sevenseals.entity.Player;
-import com.sevenseals.sevenseals.repository.GameRepository;
 import com.sevenseals.sevenseals.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
