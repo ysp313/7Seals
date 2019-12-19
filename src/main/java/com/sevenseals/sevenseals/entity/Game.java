@@ -18,7 +18,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Card> field;
 
     private int startPos;
@@ -36,6 +36,10 @@ public class Game {
         this.players = new ArrayList<>();
         this.tokens = new ArrayList<>();
         this.field = new ArrayList<>();
+    }
+    public void placeOnField(Card c){
+        this.field.add(c);
+        c.setPlayer(null);
     }
 
     public int getCurrentPos() {
@@ -102,5 +106,9 @@ public class Game {
 
     public void setOwner(Player owner) {
         this.owner= owner;
+        owner.setGame(this);
     }
+	public void addPlayer(Player player) {
+        this.players.add(player);
+	}
 }

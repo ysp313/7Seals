@@ -17,6 +17,13 @@
             </div>
             <input type="submit">
         </form>
+        <ul >
+            <li th:each= "token : ${currentPlayer.tokens}" th:text= "${token.color}"></li>
+        </ul>
+        <p>Field</p>
+        <ul>
+            <li  th:each="card : ${game.field}" th:text= "@{${card.color}+' n°'+${card.value}}"></li>
+        </ul>
     </div>
 </body>
 </html>

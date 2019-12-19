@@ -47,7 +47,7 @@ public class GameControleur{
     public String createGame(@RequestParam(name="userid") long userId){
         Game game = new Game();
         Player currentPlayer = playerRepository.findById(userId).get();
-        currentPlayer.setGame(game);
+        game.addPlayer(currentPlayer);
         game.setOwner(currentPlayer);
         game = repository.save(game);
         return "redirect:/game/"+ game.getId() + "?userid="+ userId;
@@ -86,8 +86,7 @@ public class GameControleur{
     public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, @ModelAttribute Card card){
         Game currentGame = repository.getOne(gameId);
         card = cardRepository.findById(card.getId()).get();
-        card.setGame(currentGame);
-        card.setPlayer(null);
+        currentGame.placeOnField(card);
         repository.save(currentGame);
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
@@ -119,8 +118,7 @@ public class GameControleur{
                 System.out.println(p.getUsername() + "deck:" + deck.toArray().length);
                 for (int i = 0; i < decksize / currentGame.getPlayers().toArray().length; i++) {
                     Card newCard = deck.remove(randGen.nextInt(deck.size()));
-                    newCard.setPlayer(p);
-                    newCard.setGame(currentGame);
+                    p.addCard(newCard);
                 }
                 for (Card c : p.getCard()) {
                     System.out.println(c.getColor() + " " + c.getValue());
@@ -135,14 +133,11 @@ public class GameControleur{
     @PostMapping("/game/{gameid}/taketoken")
     public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @ModelAttribute ArrayList<Token> tokenList){
         Game currentGame = repository.getOne(gameId);
-        for(Player player : currentGame.getPlayers()){
-            if(player.getId() == gameId){
-                currentGame.getTokens().removeAll(tokenList);
-                player.getTokens().addAll(tokenList);
-            }
-        }
+        Player p = playerRepository.findById(userId).get();
+        p.giveTokens(tokenList);
         currentGame.setState(GameStateEnum.PLAY_PHASE);
         repository.save(currentGame);
+        playerRepository.save(p);
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 }

@@ -31,7 +31,6 @@ public class Token {
     public void setGame(Game game) {
         this.game = game;
         this.game.getTokens().add(this);
-
     }
 
     public Player getPlayer() {

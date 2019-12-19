@@ -19,20 +19,31 @@ public class Card {
     @JoinColumn(name = "game_id")
     private Game game;
 
+    @ManyToOne
+    @JoinColumn(name = "field_id")
+    private Game field;
+
+    public Game getField() {
+        return this.field;
+    }
+
+    public void setField(Game field) {
+        this.field = field;
+    }
+
     public Card() {
     }
     public Card(int value, String color) {
         this.value=value;
         this.color = color;
     }
-
+    
     public Game getGame() {
         return game;
     }
 
     public void setGame(Game game) {
         this.game = game;
-        this.game.getField().add(this);
     }
 
     public Player getPlayer() {
