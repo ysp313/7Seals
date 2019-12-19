@@ -1,6 +1,7 @@
 package com.sevenseals.sevenseals.controller;
 
 
+import com.sevenseals.sevenseals.constant.GameStateEnum;
 import com.sevenseals.sevenseals.entity.Card;
 import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
@@ -49,9 +50,20 @@ public class GameControleur{
 
     @GetMapping("/game/{gameid}")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, Model model){
-        model.addAttribute("game",repository.getOne(gameId));
-        model.addAttribute("currentPlayer",playerRepository.getOne(userId))
-;        return "game";
+        Game currentGame = repository.getOne(gameId);
+        model.addAttribute("game",currentGame);
+        model.addAttribute("currentPlayer",playerRepository.getOne(userId));
+        switch (currentGame.getState()){
+            case WAITING_PHASE:
+                return "waiting";
+            case TOKEN_PHASE:
+                return "tokenChoice";
+            case PLAY_PHASE:
+                return "game";
+            case DONE:
+                return "endGame";
+        }
+        return "game";
     }
 
     @PostMapping("/game/join")
@@ -75,37 +87,40 @@ public class GameControleur{
     @GetMapping("/game/{gameid}/start")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId){
         Game currentGame = repository.getOne(gameId);
-        List<Card> deck = new ArrayList<>();
-        for(int i = 1; i <= currentGame.getPlayers().toArray().length * 3;i++){
-            deck.add(new Card(i, "Rouge"));
-            deck.add(new Card(i, "Jaune"));
-            deck.add(new Card(i, "Bleu"));
-            deck.add(new Card(i, "Vert"));
-            deck.add(new Card(i, "Violet"));
-        }
-        for(int i=0; i < 3; i++) {
-            new Token("Jaune").setGame(currentGame);
-            new Token("Bleu").setGame(currentGame);
-            new Token("Vert").setGame(currentGame);
-            new Token("Violet").setGame(currentGame);
-            new Token("Noir").setGame(currentGame);
-            new Token("Noir").setGame(currentGame);
-        }
+        if(currentGame.getState() == GameStateEnum.WAITING_PHASE) {
+            List<Card> deck = new ArrayList<>();
+            for (int i = 1; i <= currentGame.getPlayers().toArray().length * 3; i++) {
+                deck.add(new Card(i, "Rouge"));
+                deck.add(new Card(i, "Jaune"));
+                deck.add(new Card(i, "Bleu"));
+                deck.add(new Card(i, "Vert"));
+                deck.add(new Card(i, "Violet"));
+            }
+            for (int i = 0; i < 3; i++) {
+                new Token("Jaune").setGame(currentGame);
+                new Token("Bleu").setGame(currentGame);
+                new Token("Vert").setGame(currentGame);
+                new Token("Violet").setGame(currentGame);
+                new Token("Noir").setGame(currentGame);
+                new Token("Noir").setGame(currentGame);
+            }
 
-        Random randGen = new Random();
-        int decksize = deck.toArray().length;
-        for(Player p : currentGame.getPlayers()){
-            System.out.println(p.getUsername() + "deck:" + deck.toArray().length);
-            for(int i = 0; i <  decksize/ currentGame.getPlayers().toArray().length;i++){
-                Card newCard = deck.remove(randGen.nextInt(deck.size()));
-                newCard.setPlayer(p);
-                newCard.setGame(currentGame);
+            Random randGen = new Random();
+            int decksize = deck.toArray().length;
+            for (Player p : currentGame.getPlayers()) {
+                System.out.println(p.getUsername() + "deck:" + deck.toArray().length);
+                for (int i = 0; i < decksize / currentGame.getPlayers().toArray().length; i++) {
+                    Card newCard = deck.remove(randGen.nextInt(deck.size()));
+                    newCard.setPlayer(p);
+                    newCard.setGame(currentGame);
+                }
+                for (Card c : p.getCard()) {
+                    System.out.println(c.getColor() + " " + c.getValue());
+                }
             }
-            for(Card c:p.getCard()){
-                System.out.println(c.getColor() + " " + c.getValue());
-            }
+            currentGame.setState(GameStateEnum.TOKEN_PHASE);
+            repository.save(currentGame);
         }
-        repository.save(currentGame);
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
@@ -118,6 +133,7 @@ public class GameControleur{
                 player.getTokens().addAll(tokenList);
             }
         }
+        currentGame.setState(GameStateEnum.PLAY_PHASE);
         repository.save(currentGame);
         return "redirect:/";
     }
