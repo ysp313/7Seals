@@ -1,6 +1,7 @@
 package com.sevenseals.sevenseals.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,6 +22,9 @@ public class Game {
     private int startPos;
 
     public Game() {
+        this.players = new ArrayList<>();
+        this.tokens = new ArrayList<>();
+        this.field = new ArrayList<>();
     }
 
     public Long getId() {

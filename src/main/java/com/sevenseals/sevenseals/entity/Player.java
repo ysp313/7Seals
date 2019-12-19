@@ -25,6 +25,15 @@ public class Player {
     public Player() {
     }
 
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+        this.game.getPlayers().add(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -33,11 +42,11 @@ public class Player {
         this.id = id;
     }
 
-    public List<Card> getHand() {
+    public List<Card> getCard() {
         return card;
     }
 
-    public void setHand(List<Card> hand) {
+    public void setCard(List<Card> hand) {
         this.card = hand;
     }
 
