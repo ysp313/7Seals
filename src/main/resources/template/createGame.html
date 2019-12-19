@@ -7,10 +7,10 @@
 <body>
     <h1>Bienvenue joueur!</h1>
 
-    <form action="/user/create" th:action="@{/user/create}" method="get">
+    <form action="/user/create" th:action="'@{game/'+ game.getId()}" method="get" th:object:"${p}">
         <label for="name">Entrez votre nom</label>
-        <input type="text" id="name" th:object>
-        <input type="button" name="name">
+        <input type="text" id="name" th:field:"${name}">
+        <input type="submit" value="Enregistrer">
 
     </form>
 
