@@ -1,5 +1,7 @@
 package com.sevenseals.sevenseals.entity;
 
+import com.sevenseals.sevenseals.constant.GameStateEnum;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,28 +25,33 @@ public class Game {
 
     private int currentPos;
 
+    private GameStateEnum state;
+
+    @OneToOne
+    private Player owner;
+
+
+    public Game() {
+        this.state = GameStateEnum.WAITING_PHASE;
+        this.players = new ArrayList<>();
+        this.tokens = new ArrayList<>();
+        this.field = new ArrayList<>();
+    }
+
     public int getCurrentPos() {
-        return this.currentPos;
+        return currentPos;
     }
 
     public void setCurrentPos(int currentPos) {
         this.currentPos = currentPos;
     }
 
-    public int getState() {
-        return this.state;
+    public GameStateEnum getState() {
+        return state;
     }
 
-    public void setState(int state) {
+    public void setState(GameStateEnum state) {
         this.state = state;
-    }
-
-    private int state;
-
-    public Game() {
-        this.players = new ArrayList<>();
-        this.tokens = new ArrayList<>();
-        this.field = new ArrayList<>();
     }
 
     public Long getId() {
@@ -88,5 +95,12 @@ public class Game {
 
     public void setStartPos(int startPos) {
         this.startPos = startPos;
+    }
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner= owner;
     }
 }

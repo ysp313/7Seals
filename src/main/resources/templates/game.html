@@ -8,17 +8,15 @@
 <body>
     <p>Hello</p>
     <div>
-        <form action="/game/join" th:action="@{'/game/'${gameid}(userid=${currentPlayer.id})}" method="post">
+        <form action="/game/join" th:action="@{'/game/'+${gameid}+'/play'(userid=${currentPlayer.id})}" th:object="${selectionCard}" method="post">
             <div th:each="card : ${currentPlayer.card }">
 
-           <label th:text="@{${card.color}+' n°'+${card.value}}" th:for="|card-${card.id}|"></label>
-            <input type="radio" th:id="|card-${card.id}|" name="card" th:value="${card}"
-                   checked>
+            <label th:text="@{${card.color}+' n°'+${card.value}}" th:for="|card-${card.id}|"></label>
+                <input type="radio" th:id="|card-${card.id}|" name="card" th:value="${card.id}" th:field="*{id}"
+                    checked>
             </div>
             <input type="submit">
         </form>
     </div>
-
-    <a th:href="@{'/game/'+ ${gameid}+'/start'(userid=${currentPlayer.id}) }">Start the game</a>
 </body>
 </html>

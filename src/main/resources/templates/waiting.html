@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wait for players</title>
+</head>
+<body>
+
+    <ul>
+        <li th:each="player : ${game.players}">
+            <span th:text="${player.id}"></span>
+            <span th:text="${player.username}"></span>
+        </li>
+    </ul>
+    <span th:if="${currentPlayer.id == game.owner.id}"><a th:href="@{'/game/'+${gameid}+'/start'(userid=${currentPlayer.id})}">Start the game</a></span>
+
+</body>
+</html>
