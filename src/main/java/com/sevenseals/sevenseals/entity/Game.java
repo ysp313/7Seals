@@ -24,7 +24,12 @@ public class Game {
     private int startPos;
 
     private int currentPos;
+
     private GameStateEnum state;
+
+    @OneToOne
+    private Player owner;
+
 
     public Game() {
         this.state = GameStateEnum.WAITING_PHASE;
@@ -90,5 +95,12 @@ public class Game {
 
     public void setStartPos(int startPos) {
         this.startPos = startPos;
+    }
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner= owner;
     }
 }

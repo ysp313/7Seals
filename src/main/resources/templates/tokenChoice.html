@@ -2,12 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Choisi tes tokens</title>
 </head>
 <body>
-    <div th:each="card : ${currentPlayer.card }">
-
-        <p th:text="@{${card.color}+' n°'+${card.value}}"></p>
-    </div>
+    <form action="/game/join" th:action="@{'/game/'+${gameid}+'/taketoken'(userid=${currentPlayer.id})}" method="post">
+    
+        <div th:each="token : ${game.tokens}">
+            <label th:text="${token.color}" th:for="|token-${token.id}|"></label>
+            <input type="checkbox" th:id="|token-${token.id}|" name="token" th:value="${token}" checked>
+        </div>
+        <input type="submit">
+        </form>
 </body>
 </html>

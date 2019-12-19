@@ -44,8 +44,9 @@ public class GameControleur{
         Game game = new Game();
         Player currentPlayer = playerRepository.findById(userId).get();
         currentPlayer.setGame(game);
+        game.setOwner(currentPlayer);
         game = repository.save(game);
-        return "redirect:/game/"+ game.getId() + "/?userid="+ userId;
+        return "redirect:/game/"+ game.getId() + "?userid="+ userId;
     }
 
     @GetMapping("/game/{gameid}")
@@ -135,6 +136,6 @@ public class GameControleur{
         }
         currentGame.setState(GameStateEnum.PLAY_PHASE);
         repository.save(currentGame);
-        return "redirect:/";
+        return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 }
