@@ -1,6 +1,6 @@
 html{
 	height:100% !important;
-	color:#FF0000;
+
 }
 
 .bg-jeu {
@@ -12,30 +12,35 @@ html{
     height: 600px;
     color: #FFC162;
 }
-.jaune{
-    background-image: url(img/jaune.svg);
+.Jaune{
+    background-image: url(img/jetonJaune.svg);
     width: 204px;
-    height: 288px;  
+    height: 288px; 
+     background-repeat: no-repeat; 
 }
-.rouge{
-    background-image: url(img/rouge.svg);
+.Rouge{
+    background-image: url(img/jetonRouge.svg);
     width: 204px;
-    height: 288px;  
+    height: 288px; 
+     background-repeat: no-repeat; 
 }
-.bleu{
-    background-image: url(img/bleu.svg);
+.Bleu{
+    background-image: url(img/jetonBleu.svg);
     width: 204px;
-    height: 288px;  
+    height: 288px; 
+     background-repeat: no-repeat; 
 }
-.violet{
-    background-image: url(img/violet.svg);
+.Violet{
+    background-image: url(img/jetonViolet.svg);
     width: 204px;
     height: 288px;  
+    background-repeat: no-repeat;
 }
-.vert{
-    background-image: url(img/vert.svg);
+.Vert{
+    background-image: url(img/jetonVert.svg);
     width: 204px;
-    height: 288px;  
+    height: 288px; 
+     background-repeat: no-repeat; 
 }
 .card{
     width: 100%;

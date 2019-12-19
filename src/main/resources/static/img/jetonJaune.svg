@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84.721" height="81.833" viewBox="0 0 84.721 81.833">
+  <g id="Groupe_48" data-name="Groupe 48" transform="translate(-428.643 -499)">
+    <g id="Groupe_45" data-name="Groupe 45" transform="translate(261 151)">
+      <g id="Composant_3_8" data-name="Composant 3 – 8" transform="translate(167.643 348)">
+        <g id="Ellipse_6" data-name="Ellipse 6" transform="translate(1.32)" fill="#ffc162" stroke="#faecec" stroke-width="1">
+          <circle cx="40.615" cy="40.615" r="40.615" stroke="none"/>
+          <circle cx="40.615" cy="40.615" r="40.115" fill="none"/>
+        </g>
+        <g id="Polygone_1" data-name="Polygone 1" transform="translate(28.208 0.348) rotate(30)" fill="#ffc162" opacity="0.948">
+          <path d="M 48.07691955566406 54.91508102416992 L 17.1793270111084 54.91508102416992 L 1.732803583145142 28.20754241943359 L 17.17933654785156 1.500002384185791 L 48.07691955566406 1.500002384185791 L 63.52345275878906 28.20754241943359 L 48.07691955566406 54.91508102416992 Z" stroke="none"/>
+          <path d="M 18.04461669921875 2.999996185302734 L 3.465614318847656 28.20754241943359 L 18.04460525512695 53.41508483886719 L 47.21164703369141 53.41508483886719 L 61.79063034057617 28.20754241943359 L 47.21164703369141 2.999996185302734 L 18.04461669921875 2.999996185302734 M 16.31407165527344 -3.814697265625e-06 L 48.94219207763672 -3.814697265625e-06 L 65.25624847412109 28.20754241943359 L 48.94219207763672 56.41508865356445 L 16.31406021118164 56.41508865356445 L -7.62939453125e-06 28.20754241943359 L 16.31407165527344 -3.814697265625e-06 Z" stroke="none" fill="#faecec"/>
+        </g>
+      </g>
+    </g>
+    <g id="Groupe_30" data-name="Groupe 30" transform="translate(-269 381.961)">
+      <path id="Union_2" data-name="Union 2" d="M.243,21.272,0,21.41l.243-.138v0l16.986-9.66L.243,21.272v0ZM8.615,5.9.474,10.856Z" transform="translate(735.963 136.642)" fill="none" stroke="#faecec" stroke-width="4"/>
+    </g>
+  </g>
+</svg>
