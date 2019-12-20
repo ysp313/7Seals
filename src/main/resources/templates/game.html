@@ -2,21 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <p>Hello</p>
-    <div>
-        <form action="/game/join" th:action="@{'/game/'+${gameid}+'/play'(userid=${currentPlayer.id})}" th:object="${selectionCard}" method="post">
-            <div th:each="card : ${currentPlayer.card }">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/img/favicon.png}">
+    <title>Les 7 sceaux en ligne</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:src="@{/snow.js}"></script>
+    <meta http-equiv="refresh" content="7">
 
-            <label th:text="@{${card.color}+' n°'+${card.value}}" th:for="|card-${card.id}|"></label>
-                <input type="radio" th:id="|card-${card.id}|" name="card" th:value="${card.id}" th:field="*{id}"
-                    checked>
+</head>
+<body class="bg-jeu">
+    <div class="container-fluid m-5">
+        <div class="row">
+            <div class="col mt-4 text-center ">
+                <h1 th:text="${currentPlayer.username}"></h1>
+                <br>
+
+        <form action="/game/join" th:action="@{'/game/'+${gameid}+'/play'(userid=${currentPlayer.id})}" th:object="${selectionCard}" method="post">
+
+            <div class="row d-flex flex-row">
+                <div th:each="card : ${currentPlayer.card}" class="h2 ml-2" >
+                    <label th:class="${card.color}" th:text="${card.value}" th:for="|card-${card.id}|"></label>
+                    <input type="radio" th:id="|card-${card.id}|" name="card" th:value="${card.id}" th:field="*{id}">
+                </div>
             </div>
-            <input type="submit">
+            <input class="btn btn-white btn-outline-warning" type="submit">
         </form>
+        
+        <p th:text="|C'est le tours de ${game.playerToPlay.username}|"></p>
+        <p th:text="${currentPlayer.plis}"></p>
+        <p th:text="|Votre score: ${currentPlayer.score}|"></p>
+        <p>Field</p>
+        <ul>
+            <div th:each="card : ${game.field}" th:class="${card.color}">
+                <span class="h2 ml-2" th:text="${card.value}"></span>
+            </div>
+        </ul>
+
+    </div>
+    </div>
     </div>
 </body>
 </html>

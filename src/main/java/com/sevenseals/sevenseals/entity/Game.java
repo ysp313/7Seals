@@ -4,6 +4,7 @@ import com.sevenseals.sevenseals.constant.GameStateEnum;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -15,10 +16,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Player> players;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Token> tokens;
-
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Card> field;
 
     private int startPos;
@@ -34,8 +32,51 @@ public class Game {
     public Game() {
         this.state = GameStateEnum.WAITING_PHASE;
         this.players = new ArrayList<>();
-        this.tokens = new ArrayList<>();
         this.field = new ArrayList<>();
+    }
+    public void placeOnField(Card c){
+        this.field.add(c);
+        c.setField(this);
+        c.setPlayer(null);
+        if (this.currentPos == this.players.toArray().length-1)
+            this.checkWinner();
+        else
+            this.currentPos++;
+
+    }
+
+    private void checkWinner() {
+        int pos = (this.startPos + getWinnerPos()) % this.players.toArray().length;
+        this.players.get(pos).addScore(1);
+        this.currentPos = 0;
+        this.startPos = pos;
+        
+        for(Card card:this.field){
+            card.setField(null);
+            card = null;
+        }
+        this.field = new ArrayList<>();
+    }
+
+    private int getWinnerPos(){
+        Card winner = this.field.get(0);
+        for(Card c: this.field){
+            if(c.getColor() == "Rouge" && winner.getColor() != "Rouge"){
+                winner = c;
+            }else
+            if(c.getColor() == "Rouge" && winner.getColor() == "Rouge"){
+                if(c.getValue()>winner.getValue()){
+                    winner = c;
+                }
+            }else{
+                if(winner.getColor() != "Rouge"){
+                    if(c.getValue()>winner.getValue()){
+                        winner = c;
+                    }
+                }
+            }
+        }
+        return this.field.indexOf(winner);
     }
 
     public int getCurrentPos() {
@@ -58,17 +99,11 @@ public class Game {
         return id;
     }
 
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
 
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
-    public List<Token> getTokens() {
-        return tokens;
-    }
     public void setId(Long id) {
         this.id = id;
     }
@@ -102,5 +137,23 @@ public class Game {
 
     public void setOwner(Player owner) {
         this.owner= owner;
+        owner.setGame(this);
     }
+	public void addPlayer(Player player) {
+        this.players.add(player);
+	}
+
+    public Player getPlayerToPlay() {
+        return this.players.get((startPos + currentPos)%this.players.toArray().length);
+    }
+	public String getPlayableColor() {
+        Card first = this.field.get(0);
+        String color = first.getColor();
+        for(Card c : this.field){
+            if(c.getColor() == "Rouge"){
+                return "Rouge";
+            }
+        }
+		return color;
+	}
 }

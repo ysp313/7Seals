@@ -4,10 +4,10 @@ import com.sevenseals.sevenseals.constant.GameStateEnum;
 import com.sevenseals.sevenseals.entity.Card;
 import com.sevenseals.sevenseals.entity.Game;
 import com.sevenseals.sevenseals.entity.Player;
-import com.sevenseals.sevenseals.entity.Token;
 import com.sevenseals.sevenseals.repository.CardRepository;
 import com.sevenseals.sevenseals.repository.GameRepository;
 import com.sevenseals.sevenseals.repository.PlayerRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +24,6 @@ public class GameControleur{
 
     @Autowired
     private PlayerRepository playerRepository;
-
 
     @Autowired
     private CardRepository cardRepository;
@@ -47,7 +46,7 @@ public class GameControleur{
     public String createGame(@RequestParam(name="userid") long userId){
         Game game = new Game();
         Player currentPlayer = playerRepository.findById(userId).get();
-        currentPlayer.setGame(game);
+        game.addPlayer(currentPlayer);
         game.setOwner(currentPlayer);
         game = repository.save(game);
         return "redirect:/game/"+ game.getId() + "?userid="+ userId;
@@ -56,13 +55,21 @@ public class GameControleur{
     @GetMapping("/game/{gameid}")
     public String gameStart(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, Model model){
         Game currentGame = repository.getOne(gameId);
+        Player currentPlayer = playerRepository.getOne(userId);
         model.addAttribute("game",currentGame);
-        model.addAttribute("currentPlayer",playerRepository.getOne(userId));
+        model.addAttribute("currentPlayer",currentPlayer);
         switch (currentGame.getState()){
             case WAITING_PHASE:
                 return "waiting";
             case TOKEN_PHASE:
-                return "tokenChoice";
+                if(currentPlayer.getPlis()>0){
+                    model.addAttribute("playable", currentPlayer.getPlayableCards());
+                    model.addAttribute("selectionCard", new Card());
+                    return"game";
+                }
+                else{
+                    return "tokenChoice";
+                }
             case PLAY_PHASE:
                 model.addAttribute("selectionCard", new Card());
                 return "game";
@@ -85,10 +92,18 @@ public class GameControleur{
     @PostMapping("/game/{gameid}/play")
     public String gamePlay(@PathVariable(name = "gameid") long gameId, @RequestParam(name="userid") long userId, @ModelAttribute Card card){
         Game currentGame = repository.getOne(gameId);
+        Player currentUser = playerRepository.getOne(userId);
         card = cardRepository.findById(card.getId()).get();
-        card.setGame(currentGame);
-        card.setPlayer(null);
-        repository.save(currentGame);
+        if(currentGame.getPlayerToPlay() == currentUser){
+            currentGame.placeOnField(card);
+
+            if(currentGame.getField().size()== currentGame.getPlayers().size()){
+                cardRepository.deleteInBatch(currentGame.getField());
+            } 
+            repository.save(currentGame);
+        }else{
+            return "redirect:/game/" + currentGame.getId()+"?userid="+ userId +"&error=Ce n'est pas votre tours";
+        }
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
 
@@ -104,23 +119,13 @@ public class GameControleur{
                 deck.add(new Card(i, "Vert"));
                 deck.add(new Card(i, "Violet"));
             }
-            for (int i = 0; i < 3; i++) {
-                new Token("Jaune").setGame(currentGame);
-                new Token("Bleu").setGame(currentGame);
-                new Token("Vert").setGame(currentGame);
-                new Token("Violet").setGame(currentGame);
-                new Token("Noir").setGame(currentGame);
-                new Token("Noir").setGame(currentGame);
-            }
-
             Random randGen = new Random();
             int decksize = deck.toArray().length;
             for (Player p : currentGame.getPlayers()) {
                 System.out.println(p.getUsername() + "deck:" + deck.toArray().length);
                 for (int i = 0; i < decksize / currentGame.getPlayers().toArray().length; i++) {
                     Card newCard = deck.remove(randGen.nextInt(deck.size()));
-                    newCard.setPlayer(p);
-                    newCard.setGame(currentGame);
+                    p.addCard(newCard);
                 }
                 for (Card c : p.getCard()) {
                     System.out.println(c.getColor() + " " + c.getValue());
@@ -133,15 +138,23 @@ public class GameControleur{
     }
 
     @PostMapping("/game/{gameid}/taketoken")
-    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @ModelAttribute ArrayList<Token> tokenList){
+    public String gameTakeToken(@PathVariable(name = "gameid") long gameId,@RequestParam(name = "userid") long userId, @RequestParam int plis){
         Game currentGame = repository.getOne(gameId);
-        for(Player player : currentGame.getPlayers()){
-            if(player.getId() == gameId){
-                currentGame.getTokens().removeAll(tokenList);
-                player.getTokens().addAll(tokenList);
+        for(Player p : currentGame.getPlayers()){
+            if(p.getId()== userId) {
+                p.setPlis(plis);
+                playerRepository.save(p);
             }
         }
-        currentGame.setState(GameStateEnum.PLAY_PHASE);
+        boolean allChoosed = true;
+        for(Player p : currentGame.getPlayers()){
+            if(p.getPlis() ==0){
+                allChoosed = false;
+            }
+        }
+        if(allChoosed){
+            currentGame.setState(GameStateEnum.PLAY_PHASE);
+        }
         repository.save(currentGame);
         return "redirect:/game/" + currentGame.getId()+"?userid="+ userId;
     }
